@@ -62,7 +62,7 @@ def calc_price(model, usage):
         return (0.0015 * usage.prompt_tokens + 0.002 * usage.completion_tokens) / 1000.0
 
 
-@retry.retry(tries=3, delay=2)
+@retry.retry(tries=3, delay=60)
 def call_chatgpt(full_prompt, openai_client, model, num_samples):
     return openai_client.chat.completions.create(
         model=model,
