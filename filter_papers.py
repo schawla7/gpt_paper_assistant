@@ -5,6 +5,7 @@ import os
 import re
 from collections import defaultdict
 from typing import List
+import time
 
 import retry
 from openai import OpenAI
@@ -215,7 +216,7 @@ def filter_by_gpt(
                 + str(cost)
             )
         all_cost += cost
-
+        time.delay(60)
         # batch the remaining papers and invoke GPT
         batch_of_papers = batched(paper_list, int(config["SELECTION"]["batch_size"]))
         scored_batches = []
