@@ -222,7 +222,7 @@ def filter_by_gpt(
         scored_batches = []
         for batch in tqdm(batch_of_papers):
             temp += 1
-            if temp>2:
+            if temp>1:
                 break
             scored_in_batch = []
             json_dicts, cost = run_on_batch(
