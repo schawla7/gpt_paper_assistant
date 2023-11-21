@@ -218,43 +218,43 @@ def filter_by_gpt(
         all_cost += cost
         # batch the remaining papers and invoke GPT
         batch_of_papers = batched(paper_list, int(config["SELECTION"]["batch_size"]))
-        temp = 0
-        scored_batches = []
-        for batch in tqdm(batch_of_papers):
-            temp += 1
-            if temp>1:
-                break
-            scored_in_batch = []
-            json_dicts, cost = run_on_batch(
-                batch, base_prompt, criterion, postfix_prompt, openai_client, config
-            )
-            all_cost += cost
-            for jdict in json_dicts:
-                if (
-                    int(jdict["RELEVANCE"])
-                    >= int(config["FILTERING"]["relevance_cutoff"])
-                    and jdict["NOVELTY"] >= int(config["FILTERING"]["novelty_cutoff"])
-                    and jdict["ARXIVID"] in all_papers
-                ):
-                    selected_papers[jdict["ARXIVID"]] = {
-                        **dataclasses.asdict(all_papers[jdict["ARXIVID"]]),
-                        **jdict,
-                    }
-                    sort_dict[jdict["ARXIVID"]] = jdict["RELEVANCE"] + jdict["NOVELTY"]
-                scored_in_batch.append(
-                    {
-                        **dataclasses.asdict(all_papers[jdict["ARXIVID"]]),
-                        **jdict,
-                    }
-                )
-            scored_batches.append(scored_in_batch)
-        if config["OUTPUT"].getboolean("dump_debug_file"):
-            with open(
-                config["OUTPUT"]["output_path"] + "gpt_paper_batches.debug.json", "w"
-            ) as outfile:
-                json.dump(scored_batches, outfile, cls=EnhancedJSONEncoder, indent=4)
-        if config["OUTPUT"].getboolean("debug_messages"):
-            print("Total cost: $" + str(all_cost))
+        # temp = 0
+        # scored_batches = []
+        # for batch in tqdm(batch_of_papers):
+        #     temp += 1
+        #     if temp>1:
+        #         break
+        #     scored_in_batch = []
+        #     json_dicts, cost = run_on_batch(
+        #         batch, base_prompt, criterion, postfix_prompt, openai_client, config
+        #     )
+        #     all_cost += cost
+        #     for jdict in json_dicts:
+        #         if (
+        #             int(jdict["RELEVANCE"])
+        #             >= int(config["FILTERING"]["relevance_cutoff"])
+        #             and jdict["NOVELTY"] >= int(config["FILTERING"]["novelty_cutoff"])
+        #             and jdict["ARXIVID"] in all_papers
+        #         ):
+        #             selected_papers[jdict["ARXIVID"]] = {
+        #                 **dataclasses.asdict(all_papers[jdict["ARXIVID"]]),
+        #                 **jdict,
+        #             }
+        #             sort_dict[jdict["ARXIVID"]] = jdict["RELEVANCE"] + jdict["NOVELTY"]
+        #         scored_in_batch.append(
+        #             {
+        #                 **dataclasses.asdict(all_papers[jdict["ARXIVID"]]),
+        #                 **jdict,
+        #             }
+        #         )
+        #     scored_batches.append(scored_in_batch)
+        # if config["OUTPUT"].getboolean("dump_debug_file"):
+        #     with open(
+        #         config["OUTPUT"]["output_path"] + "gpt_paper_batches.debug.json", "w"
+        #     ) as outfile:
+        #         json.dump(scored_batches, outfile, cls=EnhancedJSONEncoder, indent=4)
+        # if config["OUTPUT"].getboolean("debug_messages"):
+        #     print("Total cost: $" + str(all_cost))
 
 
 if __name__ == "__main__":
